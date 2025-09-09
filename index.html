@@ -2,517 +2,536 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>WhatsApp — overlay (text + image) with Light/Dark Toggle</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WhatsApp — overlay (text + image) with Light/Dark Toggle</title>
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome (header icons only) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" />
-    <!-- Lucide (thin outline icons for the sheet) -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome (header icons only) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous" />
+  <!-- Lucide (thin outline icons for the sheet) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-    <style>
-        /* THEME TOKENS */
-        #phone.theme-light {
-            --app-bg: #ffffff;
-            --header-bg: #008069;
-            --header-fg: #ffffff;
-            --chat-wallpaper: radial-gradient(circle at 2px 2px, rgba(0, 0, 0, .05) 2px, transparent 2px) 0 0/30px 30px,
-                linear-gradient(180deg, #efeae2 0%, #e5ddd5 100%);
-            --sent-bg: #DCF8C6;
-            --sent-fg: #111111;
-            --incoming-bg: #ffffff;
-            --incoming-fg: #111111;
-            --time-fg: #a3a3a3;
+  <style>
+    /* THEME TOKENS */
+    #phone.theme-light {
+      --app-bg: #ffffff;
+      --header-bg: #008069;
+      --header-fg: #ffffff;
+      --chat-wallpaper: radial-gradient(circle at 2px 2px, rgba(0, 0, 0, .05) 2px, transparent 2px) 0 0/30px 30px,
+        linear-gradient(180deg, #efeae2 0%, #e5ddd5 100%);
+      --sent-bg: #DCF8C6;
+      --sent-fg: #111111;
+      --incoming-bg: #ffffff;
+      --incoming-fg: #111111;
+      --time-fg: #a3a3a3;
 
-            --ov-bg: rgba(255, 255, 255, .55);
-            --ov-blur: 3px;
+      --ov-bg: rgba(255, 255, 255, .55);
+      --ov-blur: 3px;
 
-            --reactions-bg: rgba(255, 255, 255, .94);
-            --reactions-border: rgba(0, 0, 0, .06);
-            --reactions-shadow: 0 12px 28px rgba(0, 0, 0, .14), 0 2px 4px rgba(0, 0, 0, .06);
+      --reactions-bg: rgba(255, 255, 255, .94);
+      --reactions-border: rgba(0, 0, 0, .06);
+      --reactions-shadow: 0 12px 28px rgba(0, 0, 0, .14), 0 2px 4px rgba(0, 0, 0, .06);
 
-            --sheet-bg: linear-gradient(180deg, #f6f7f8 0%, #eceeef 100%);
-            --sheet-fg: #111111;
-            --sheet-border: rgba(0, 0, 0, .08);
-            --sheet-hover: rgba(255, 255, 255, .9);
-            --sheet-divider: rgba(0, 0, 0, .10);
+      --sheet-bg: linear-gradient(180deg, #f6f7f8 0%, #eceeef 100%);
+      --sheet-fg: #111111;
+      --sheet-border: rgba(0, 0, 0, .08);
+      --sheet-hover: rgba(255, 255, 255, .9);
+      --sheet-divider: rgba(0, 0, 0, .10);
 
-            --input-bg: #ffffff;
-            --input-border: #e5e7eb;
-            --input-field-bg: #f3f4f6;
-            --icon-fg: #111111;
-        }
+      --input-bg: #ffffff;
+      --input-border: #e5e7eb;
+      --input-field-bg: #f3f4f6;
+      --icon-fg: #111111;
+    }
 
-        #phone.theme-dark {
-            --app-bg: #0b1320;
-            --header-bg: #1f2937;
-            --header-fg: #e5e7eb;
-            --chat-wallpaper: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .04) 2px, transparent 2px) 0 0/28px 28px,
-                linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
-            --sent-bg: rgba(16, 185, 129, .22);
-            --sent-fg: #e5e7eb;
-            --incoming-bg: #23272b;
-            --incoming-fg: #e5e7eb;
-            --time-fg: #9ca3af;
+    #phone.theme-dark {
+      --app-bg: #0b1320;
+      --header-bg: #1f2937;
+      --header-fg: #e5e7eb;
+      --chat-wallpaper: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .04) 2px, transparent 2px) 0 0/28px 28px,
+        linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+      --sent-bg: rgba(16, 185, 129, .22);
+      --sent-fg: #e5e7eb;
+      --incoming-bg: #23272b;
+      --incoming-fg: #e5e7eb;
+      --time-fg: #9ca3af;
 
-            --ov-bg: rgba(0, 0, 0, .55);
-            --ov-blur: 4px;
+      --ov-bg: rgba(0, 0, 0, .55);
+      --ov-blur: 4px;
 
-            --reactions-bg: rgba(32, 32, 36, .9);
-            --reactions-border: rgba(255, 255, 255, .08);
-            --reactions-shadow: 0 14px 28px rgba(0, 0, 0, .5), 0 2px 5px rgba(0, 0, 0, .3);
+      --reactions-bg: rgba(32, 32, 36, .9);
+      --reactions-border: rgba(255, 255, 255, .08);
+      --reactions-shadow: 0 14px 28px rgba(0, 0, 0, .5), 0 2px 5px rgba(0, 0, 0, .3);
 
-            --sheet-bg: linear-gradient(180deg, rgba(39, 41, 46, .96), rgba(23, 25, 28, .96));
-            --sheet-fg: #e5e7eb;
-            --sheet-border: rgba(255, 255, 255, .08);
-            --sheet-hover: rgba(255, 255, 255, .06);
-            --sheet-divider: rgba(255, 255, 255, .10);
+      --sheet-bg: linear-gradient(180deg, rgba(39, 41, 46, .96), rgba(23, 25, 28, .96));
+      --sheet-fg: #e5e7eb;
+      --sheet-border: rgba(255, 255, 255, .08);
+      --sheet-hover: rgba(255, 255, 255, .06);
+      --sheet-divider: rgba(255, 255, 255, .10);
 
-            --input-bg: #111827;
-            --input-border: rgba(255, 255, 255, .10);
-            --input-field-bg: rgba(255, 255, 255, .10);
-            --icon-fg: #e5e7eb;
-        }
+      --input-bg: #111827;
+      --input-border: rgba(255, 255, 255, .10);
+      --input-field-bg: rgba(255, 255, 255, .10);
+      --icon-fg: #e5e7eb;
+    }
 
-        /* App chrome */
-        #phone {
-            background: var(--app-bg);
-        }
+    /* App chrome */
+    #phone {
+      background: var(--app-bg);
+    }
 
-        .chat-wallpaper {
-            background: var(--chat-wallpaper);
-        }
+    .chat-wallpaper {
+      background: var(--chat-wallpaper);
+    }
 
-        .wh-header {
-            background: var(--header-bg);
-            color: var(--header-fg);
-        }
+    .wh-header {
+      background: var(--header-bg);
+      color: var(--header-fg);
+    }
 
-        .wh-header i {
-            color: inherit;
-        }
+    .wh-header i {
+      color: inherit;
+    }
 
-        .time {
-            color: var(--time-fg);
-        }
+    .time {
+      color: var(--time-fg);
+    }
 
-        /* Bubbles */
-        .sent {
-            background: var(--sent-bg);
-            color: var(--sent-fg);
-        }
+    /* Bubbles */
+    .sent {
+      background: var(--sent-bg);
+      color: var(--sent-fg);
+    }
 
-        .incoming {
-            background: var(--incoming-bg);
-            color: var(--incoming-fg);
-        }
+    .incoming {
+      background: var(--incoming-bg);
+      color: var(--incoming-fg);
+    }
 
-        /* Phone shadow */
-        .phone {
-            box-shadow: 0 24px 60px rgba(0, 0, 0, .25), 0 3px 12px rgba(0, 0, 0, .12);
-        }
+    /* Phone shadow */
+    .phone {
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .25), 0 3px 12px rgba(0, 0, 0, .12);
+    }
 
-        /* Overlay: fade only; animate inner layers (no scale on the overlay itself) */
-        .fade {
-            transition: opacity .18s ease-out;
-        }
+    /* Overlay: fade only; animate inner layers (no scale on the overlay itself) */
+    .fade {
+      transition: opacity .18s ease-out;
+    }
 
-        #overlay.ov-hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+    #overlay.ov-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
 
-        #overlay.ov-shown {
-            opacity: 1;
-            pointer-events: auto;
-        }
+    #overlay.ov-shown {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-        .anim {
-            transition: opacity .18s ease-out, transform .18s ease-out;
-        }
+    .anim {
+      transition: opacity .18s ease-out, transform .18s ease-out;
+    }
 
-        #overlay.ov-hidden .anim {
-            opacity: 0;
-            transform: translateY(6px);
-        }
+    #overlay.ov-hidden .anim {
+      opacity: 0;
+      transform: translateY(6px);
+    }
 
-        #overlay.ov-shown .anim {
-            opacity: 1;
-            transform: none;
-        }
+    #overlay.ov-shown .anim {
+      opacity: 1;
+      transform: none;
+    }
 
-        /* Blur layer */
-        #ov-bg {
-            background: var(--ov-bg);
-            backdrop-filter: blur(var(--ov-blur)) saturate(120%);
-            -webkit-backdrop-filter: blur(var(--ov-blur)) saturate(120%);
-        }
+    /* Blur layer */
+    #ov-bg {
+      background: var(--ov-bg);
+      backdrop-filter: blur(var(--ov-blur)) saturate(120%);
+      -webkit-backdrop-filter: blur(var(--ov-blur)) saturate(120%);
+    }
 
-        /* Reactions pill */
-        #reactions {
-            background: var(--reactions-bg);
-            border: 1px solid var(--reactions-border);
-            box-shadow: var(--reactions-shadow);
-        }
+    /* Reactions pill */
+    #reactions {
+      background: var(--reactions-bg);
+      border: 1px solid var(--reactions-border);
+      box-shadow: var(--reactions-shadow);
+    }
 
-        #reactions span {
-            line-height: 1;
-            transform: translateY(1px);
-        }
+    #reactions span {
+      line-height: 1;
+      transform: translateY(1px);
+    }
 
-        .rx-more {
-            width: 28px;
-            height: 28px;
-            display: grid;
-            place-items: center;
-            border-radius: 9999px;
-            background: rgba(255, 255, 255, .96);
-            border: 1px solid rgba(0, 0, 0, .08);
-            color: #525252;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 6px 18px rgba(0, 0, 0, .08);
-        }
+    .rx-more {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, .96);
+      border: 1px solid rgba(0, 0, 0, .08);
+      color: #525252;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 6px 18px rgba(0, 0, 0, .08);
+    }
 
-        #phone.theme-dark .rx-more {
-            background: rgba(255, 255, 255, .08);
-            border-color: rgba(255, 255, 255, .14);
-            color: #d1d5db;
-            box-shadow: none;
-        }
+    #phone.theme-dark .rx-more {
+      background: rgba(255, 255, 255, .08);
+      border-color: rgba(255, 255, 255, .14);
+      color: #d1d5db;
+      box-shadow: none;
+    }
 
-        /* Sheet */
-        .wa-sheet {
-            min-width: 276px;
-            border-radius: 18px;
-            overflow: hidden;
-            background: var(--sheet-bg);
-            border: 1px solid var(--sheet-border);
-            box-shadow: 0 22px 44px rgba(0, 0, 0, .20), 0 3px 8px rgba(0, 0, 0, .10);
-        }
+    /* Sheet */
+    .wa-sheet {
+      min-width: 276px;
+      border-radius: 18px;
+      overflow: hidden;
+      background: var(--sheet-bg);
+      border: 1px solid var(--sheet-border);
+      box-shadow: 0 22px 44px rgba(0, 0, 0, .20), 0 3px 8px rgba(0, 0, 0, .10);
+    }
 
-        .wa-list {
-            font-size: 15px;
-            color: var(--sheet-fg);
-        }
+    .wa-list {
+      font-size: 15px;
+      color: var(--sheet-fg);
+    }
 
-        .wa-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            background: transparent;
-        }
+    .wa-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: transparent;
+    }
 
-        .wa-item+.wa-item {
-            border-top: 1px solid var(--sheet-border);
-        }
+    .wa-item+.wa-item {
+      border-top: 1px solid var(--sheet-border);
+    }
 
-        .wa-item:hover {
-            background: var(--sheet-hover);
-            transition: background .15s ease;
-        }
+    .wa-item:hover {
+      background: var(--sheet-hover);
+      transition: background .15s ease;
+    }
 
-        .wa-ico>svg,
-        .wa-sheet svg {
-            width: 22px;
-            height: 22px;
-            stroke-width: 1.8;
-            stroke: currentColor;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
+    .wa-ico>svg,
+    .wa-sheet svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.8;
+      stroke: currentColor;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-        .wa-danger {
-            color: #d92d20;
-        }
+    .wa-danger {
+      color: #d92d20;
+    }
 
-        .wa-sep {
-            height: 10px;
-            background: var(--sheet-divider);
-            border-top: 1px solid var(--sheet-border);
-            border-bottom: 1px solid var(--sheet-border);
-        }
+    .wa-sep {
+      height: 10px;
+      background: var(--sheet-divider);
+      border-top: 1px solid var(--sheet-border);
+      border-bottom: 1px solid var(--sheet-border);
+    }
 
-        /* Input */
-        .input-bar {
-            background: var(--input-bg);
-            border-top: 1px solid var(--input-border);
-        }
+    /* Input */
+    .input-bar {
+      background: var(--input-bg);
+      border-top: 1px solid var(--input-border);
+    }
 
-        .input-bar input {
-            background: var(--input-field-bg);
-            color: var(--sheet-fg);
-        }
+    .input-bar input {
+      background: var(--input-field-bg);
+      color: var(--sheet-fg);
+    }
 
-        .input-bar i {
-            color: var(--icon-fg);
-            opacity: .85;
-        }
-    </style>
+    .input-bar i {
+      color: var(--icon-fg);
+      opacity: .85;
+    }
+  </style>
 </head>
 
 <body class="min-h-screen sm:bg-neutral-200 flex items-center justify-center sm:p-6">
-    <section id="phone" class="theme-light relative w-[392px] h-[780px] sm:rounded-[32px] overflow-hidden phone">
-        <!-- Header -->
-        <header class="wh-header h-14 px-4 flex items-center gap-3">
-            <i class="fa-solid fa-angle-left text-xl"></i>
-            <div class="w-9 h-9 rounded-full" style="background: rgba(255,255,255,.2);"></div>
-            <div class="flex-1">
-                <p class="text-[15px] font-semibold leading-4">Aleyna</p>
-                <p class="text-xs opacity-80 leading-4">online</p>
-            </div>
-            <i class="fa-solid fa-video text-lg"></i>
-            <i class="fa-solid fa-phone text-lg ml-4"></i>
-            <!-- Three dots toggles theme -->
-            <i id="themeBtn" class="fa-solid fa-ellipsis-vertical text-lg ml-4 cursor-pointer"
-                title="Toggle light/dark"></i>
-        </header>
+  <section id="phone" class="theme-light relative w-[392px] h-[780px] sm:rounded-[32px] overflow-hidden phone">
+    <!-- Header -->
+    <header class="wh-header h-14 px-4 flex items-center gap-3">
+      <i class="fa-solid fa-angle-left text-xl"></i>
+      <div class="w-9 h-9 rounded-full" style="background: rgba(255,255,255,.2);"></div>
+      <div class="flex-1">
+        <p class="text-[15px] font-semibold leading-4">Aleyna</p>
+        <p class="text-xs opacity-80 leading-4">online</p>
+      </div>
+      <i class="fa-solid fa-video text-lg"></i>
+      <i class="fa-solid fa-phone text-lg ml-4"></i>
+      <!-- Three dots toggles theme -->
+      <i id="themeBtn" class="fa-solid fa-ellipsis-vertical text-lg ml-4 cursor-pointer" title="Toggle light/dark"></i>
+    </header>
 
-        <!-- Chat -->
-        <div id="chat" class="chat-wallpaper h-[calc(100%-56px)] overflow-y-auto p-3 pb-24 relative">
-            <!-- Sent group -->
-            <div class="space-y-2">
-                <div class="flex justify-end">
-                    <div data-bubble
-                        class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">On my
-                        way 🚗</div>
-                </div>
-                <div class="flex justify-end">
-                    <div data-bubble
-                        class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">5 mins
-                    </div>
-                </div>
-            </div>
+    <!-- Chat -->
+    <div id="chat" class="chat-wallpaper h-[calc(100%-56px)] overflow-y-auto p-3 pb-24 relative">
 
-
-            <!-- Received IMAGE bubble -->
-            <div class="mt-3">
-                <div data-bubble
-                    class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md overflow-hidden shadow-sm">
-                    <img src="/docs/car.JPG" alt="Shared photo" class="block w-full h-auto max-h-60 object-cover">
-                    <div class="px-3 py-2">
-                        <div class="time text-[10px] mt-1 text-right">16:55</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Received text -->
-            <div class="mt-2">
-                <div data-bubble
-                    class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
-                    <p class="text-[14px]">Aleyna ich komm dich jetzt abholen – hab neuen AMG, lass ihn einweihen</p>
-                    <div class="time text-[10px] mt-1 text-right">16:54</div>
-                </div>
-            </div>
-            <!-- More messages (both sides) -->
-            <div class="mt-3 space-y-2">
-                <div class="flex">
-                    <div data-bubble
-                        class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
-                        <p class="text-[14px]">Wo bist du? 👀</p>
-                        <div class="time text-[10px] mt-1 text-right">16:55</div>
-                    </div>
-                </div>
-                <div class="flex justify-end">
-                    <div data-bubble
-                        class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">Gleich
-                        unten 😉</div>
-                </div>
-                <div class="flex">
-                    <div data-bubble
-                        class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
-                        <p class="text-[14px]">Bringst du Snacks? 😅</p>
-                        <div class="time text-[10px] mt-1 text-right">16:56</div>
-                    </div>
-                </div>
-                <div class="flex justify-end">
-                    <div data-bubble
-                        class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">Hab
-                        alles 😎</div>
-                </div>
-                <div class="flex">
-                    <div data-bubble
-                        class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
-                        <p class="text-[14px]">Perfekt, bin gleich da ✨</p>
-                        <div class="time text-[10px] mt-1 text-right">16:57</div>
-                    </div>
-                </div>
-            </div>
+      <!-- Received text -->
+      <div class="mt-2">
+        <div data-bubble
+          class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
+          <p class="text-[14px]">Aleyna ich komm dich jetzt abholen hab neuen amg lass ihn einweihen</p>
+          <div class="time text-[10px] mt-1 text-right">16:54</div>
         </div>
+      </div>
 
-        <!-- Input -->
-        <footer class="input-bar absolute bottom-0 left-0 right-0 px-3 py-2 flex items-center gap-2">
-            <i class="fa-regular fa-face-smile text-xl"></i>
-            <input class="flex-1 rounded-full px-4 py-2 text-[14px] w-full outline-none"
-                placeholder="Nachricht schreiben…" />
-            <i class="fa-solid fa-paperclip text-lg"></i>
-            <button class="w-10 h-10 rounded-full text-white grid shrink-0 place-items-center"
-                style="background:#008069;">
-                <i class="fa-solid fa-paper-plane"></i>
-            </button>
-        </footer>
-
-        <!-- ============= ONE OVERLAY (blur + emojis + dropdown) ============= -->
-        <div id="overlay" class="absolute inset-0 z-50 ov-hidden fade">
-            <!-- blur above chat but below promoted bubble -->
-            <div id="ov-bg" class="absolute inset-0 z-[50]"></div>
-
-            <!-- emoji bar (top layer) -->
-            <div id="reactions" class="anim absolute z-[70] rounded-full px-3 py-1 flex items-center gap-2">
-                <span class="text-[20px] leading-none">👍</span>
-                <span class="text-[20px] leading-none">❤️</span>
-                <span class="text-[20px] leading-none">😂</span>
-                <span class="text-[20px] leading-none">😮</span>
-                <span class="text-[20px] leading-none">😢</span>
-                <span class="text-[20px] leading-none">🙏</span>
-                <span class="text-[20px] leading-none">🔥</span>
-                <button class="rx-more ml-1" aria-label="More reactions">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25"
-                        stroke-linecap="round">
-                        <path d="M12 5v14M5 12h14" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- WhatsApp-like dropdown -->
-            <div id="sheet" class="anim absolute z-[70] rounded-2xl overflow-hidden wa-sheet">
-                <ul class="min-w-[270px] text-[15px] divide-y wa-list" style="border-color: var(--sheet-border);">
-                    <li class="wa-item"><span>Antworten</span><i data-lucide="corner-down-left"
-                            class="wa-ico w-5 h-5"></i></li>
-                    <li class="wa-item"><span>Weiterleiten</span><i data-lucide="corner-down-right"
-                            class="wa-ico w-5 h-5"></i></li>
-                    <li class="wa-item"><span>Kopieren</span><i data-lucide="copy" class="w-5 h-5"></i></li>
-                    <li class="wa-item"><span>Mit Stern markieren</span><i data-lucide="star" class="w-5 h-5"></i></li>
-                    <li class="wa-item wa-danger"><span>Löschen</span><i data-lucide="trash-2" class="w-5 h-5"></i></li>
-                    <li class="wa-sep"></li>
-                    <li class="wa-item">
-                        <span>Mehr …</span>
-                        <svg viewBox="0 0 24 24" class="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="8.8" />
-                            <circle cx="9" cy="12" r="1.5" fill="currentColor" stroke="none" />
-                            <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
-                            <circle cx="15" cy="12" r="1.5" fill="currentColor" stroke="none" />
-                        </svg>
-                    </li>
-                </ul>
-            </div>
+      <!-- Received IMAGE bubble -->
+      <div class="mt-3">
+        <div data-bubble
+          class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md overflow-hidden shadow-sm">
+          <img src="/docs/car.JPG" alt="Shared photo" class="block w-full h-auto max-h-60 object-cover">
+          <div class="px-3 py-2">
+            <div class="time text-[10px] mt-1 text-right">16:55</div>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <script>
-        const phone = document.getElementById('phone');
-        const chat = document.getElementById('chat');
-        const overlay = document.getElementById('overlay');
-        const ovBg = document.getElementById('ov-bg');
-        const reactions = document.getElementById('reactions');
-        const sheet = document.getElementById('sheet');
-        const themeBtn = document.getElementById('themeBtn');
+      <!-- More messages (both sides) -->
+      <div class="mt-3 space-y-2">
+        <div class="flex justify-end">
+          <div data-bubble class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">
+            Was interessiert mich aber dein Auto? Bin mit einer Freundin</div>
+        </div>
+        <div class="flex">
+          <div data-bubble
+            class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
+            <p class="text-[14px]">Cüü wie nein rückbank ist sogar voll Leder😉</p>
+            <div class="time text-[10px] mt-1 text-right">16:55</div>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <div data-bubble class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">
+            Nein Junge sehe ich aus wie eine schla...?</div>
+        </div>
+        <div class="flex">
+          <div data-bubble
+            class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
+            <p class="text-[14px]">Hä guck mal du denkst schon wieder perv.. wir chillen nur auf entspannte</p>
+            <div class="time text-[10px] mt-1 text-right">16:56</div>
+          </div>
+        </div>
+        
+        <div class="flex justify-end">
+          <div data-bubble class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">Hmm das sagst du immer</div>
+        </div>
+        
+        <div class="flex justify-end">
+          <div data-bubble class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">Es bleibt es nicht nur beim chillen 😅</div>
+        </div>
+        
+        <div class="flex">
+          <div data-bubble
+            class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
+            <p class="text-[14px]">Ja aber was soll ich machen wenn du dich immer auf meinem Schoß setzt 🤣</p>
+            <div class="time text-[10px] mt-1 text-right">16:57</div>
+          </div>
+        </div>
+        <div class="flex">
+          <div data-bubble
+            class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
+            <p class="text-[14px]">Tmm bin in 5 min da</p>
+            <div class="time text-[10px] mt-1 text-right">16:57</div>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <div data-bubble class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">Aber denk an die Chanel Tasche hm?</div>
+        </div>
+        
+        <div class="flex">
+          <div data-bubble
+            class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
+            <p class="text-[14px]">Wenn du dich benimmst😉</p>
+            <div class="time text-[10px] mt-1 text-right">16:57</div>
+          </div>
+        </div>
+        <div class="flex justify-end">
+          <div data-bubble class="cursor-pointer max-w-[72%] rounded-2xl rounded-br-md px-3 py-2 text-[13px] sent">Es bleibt es nicht nur beim chillen 😅</div>
+        </div>
+        
+        <div class="flex">
+          <div data-bubble
+            class="cursor-pointer inline-block max-w-[82%] incoming rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
+            <p class="text-[14px]">Ja aber was soll ich machen wenn du dich immer auf meinem Schoß setzt 🤣</p>
+            <div class="time text-[10px] mt-1 text-right">16:57</div>
+          </div>
+        </div>
+       
+      </div>
+    </div>
 
-        let activeBubble = null;
-        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-        const openOverlay = () => overlay.classList.replace('ov-hidden', 'ov-shown');
-        const closeOverlay = () => {
-            overlay.classList.replace('ov-shown', 'ov-hidden');
-            if (activeBubble) {
-                activeBubble.style.position = '';
-                activeBubble.style.zIndex = '';
-                activeBubble = null;
-            }
-        };
+    <!-- Input -->
+    <footer class="input-bar absolute bottom-0 left-0 right-0 px-3 py-2 flex items-center gap-2">
+      <i class="fa-regular fa-face-smile text-xl"></i>
+      <input class="flex-1 rounded-full px-4 py-2 text-[14px] w-full outline-none" placeholder="Nachricht schreiben…" />
+      <i class="fa-solid fa-paperclip text-lg"></i>
+      <button class="w-10 h-10 rounded-full text-white grid shrink-0 place-items-center" style="background:#008069;">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </footer>
 
-        function openFor(bubble) {
-            // Toggle if same bubble
-            if (overlay.classList.contains('ov-shown') && activeBubble === bubble) { closeOverlay(); return; }
+    <!-- ============= ONE OVERLAY (blur + emojis + dropdown) ============= -->
+    <div id="overlay" class="absolute inset-0 z-50 ov-hidden fade">
+      <!-- blur above chat but below promoted bubble -->
+      <div id="ov-bg" class="absolute inset-0 z-[50]"></div>
 
-            // Clean previous bubble styles
-            if (activeBubble && activeBubble !== bubble) {
-                activeBubble.style.position = '';
-                activeBubble.style.zIndex = '';
-            }
+      <!-- emoji bar (top layer) -->
+      <div id="reactions" class="anim absolute z-[70] rounded-full px-3 py-1 flex items-center gap-2">
+        <span class="text-[20px] leading-none">👍</span>
+        <span class="text-[20px] leading-none">❤️</span>
+        <span class="text-[20px] leading-none">😂</span>
+        <span class="text-[20px] leading-none">😮</span>
+        <span class="text-[20px] leading-none">😢</span>
+        <span class="text-[20px] leading-none">🙏</span>
+        <span class="text-[20px] leading-none">🔥</span>
+        <button class="rx-more ml-1" aria-label="More reactions">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </button>
+      </div>
 
-            const p = phone.getBoundingClientRect();
-            const b = bubble.getBoundingClientRect();
-            const pad = 8, gapSheet = 10, gapRx = 8;
+      <!-- WhatsApp-like dropdown -->
+      <div id="sheet" class="anim absolute z-[70] rounded-2xl overflow-hidden wa-sheet">
+        <ul class="min-w-[270px] text-[15px] divide-y wa-list" style="border-color: var(--sheet-border);">
+          <li class="wa-item"><span>Antworten</span><i data-lucide="corner-down-left" class="wa-ico w-5 h-5"></i></li>
+          <li class="wa-item"><span>Weiterleiten</span><i data-lucide="corner-down-right" class="wa-ico w-5 h-5"></i>
+          </li>
+          <li class="wa-item"><span>Kopieren</span><i data-lucide="copy" class="w-5 h-5"></i></li>
+          <li class="wa-item"><span>Mit Stern markieren</span><i data-lucide="star" class="w-5 h-5"></i></li>
+          <li class="wa-item wa-danger"><span>Löschen</span><i data-lucide="trash-2" class="w-5 h-5"></i></li>
+          <li class="wa-sep"></li>
+          <li class="wa-item">
+            <span>Mehr …</span>
+            <svg viewBox="0 0 24 24" class="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="8.8" />
+              <circle cx="9" cy="12" r="1.5" fill="currentColor" stroke="none" />
+              <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+              <circle cx="15" cy="12" r="1.5" fill="currentColor" stroke="none" />
+            </svg>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-            // Lift the clicked bubble ABOVE the blur but BELOW emojis/sheet
-            activeBubble = bubble;
-            bubble.style.position = 'relative';
-            bubble.style.zIndex = '60'; // ov-bg is z-50, emojis/sheet are z-70
+  <script>
+    const phone = document.getElementById('phone');
+    const chat = document.getElementById('chat');
+    const overlay = document.getElementById('overlay');
+    const ovBg = document.getElementById('ov-bg');
+    const reactions = document.getElementById('reactions');
+    const sheet = document.getElementById('sheet');
+    const themeBtn = document.getElementById('themeBtn');
 
-            openOverlay();
+    let activeBubble = null;
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    const openOverlay = () => overlay.classList.replace('ov-hidden', 'ov-shown');
+    const closeOverlay = () => {
+      overlay.classList.replace('ov-shown', 'ov-hidden');
+      if (activeBubble) {
+        activeBubble.style.position = '';
+        activeBubble.style.zIndex = '';
+        activeBubble = null;
+      }
+    };
 
-            // Reset positions before measuring
-            reactions.style.left = '0px'; reactions.style.top = '0px';
-            sheet.style.left = '0px'; sheet.style.top = '0px';
+    function openFor(bubble) {
+      // Toggle if same bubble
+      if (overlay.classList.contains('ov-shown') && activeBubble === bubble) { closeOverlay(); return; }
 
-            requestAnimationFrame(() => {
-                const rxW = reactions.offsetWidth, rxH = reactions.offsetHeight;
-                const shW = sheet.offsetWidth, shH = sheet.offsetHeight;
+      // Clean previous bubble styles
+      if (activeBubble && activeBubble !== bubble) {
+        activeBubble.style.position = '';
+        activeBubble.style.zIndex = '';
+      }
 
-                // Decide where to place the SHEET.
-                // Prefer below; if not enough space under the bubble, flip above.
-                const needFlipUp = (b.bottom + shH + 40) > p.bottom; // 40px cushion for shadow/gesture space
-                const sheetTopRaw = needFlipUp
-                    ? (b.top - p.top) - shH - gapSheet   // above the bubble
-                    : (b.top - p.top) + b.height + gapSheet; // below the bubble
-                const shTop = clamp(sheetTopRaw, pad, p.height - shH - pad);
-                const shLeft = clamp(b.left - p.left, pad, p.width - shW - pad);
-                sheet.style.left = shLeft + 'px';
-                sheet.style.top = shTop + 'px';
+      const p = phone.getBoundingClientRect();
+      const b = bubble.getBoundingClientRect();
+      const pad = 8, gapSheet = 10, gapRx = 8;
 
-                // Place REACTIONS on the OPPOSITE side of the sheet to avoid overlap.
-                let rxTopRaw = needFlipUp
-                    ? (b.top - p.top) + b.height + gapRx   // sheet above -> reactions below
-                    : (b.top - p.top) - rxH - gapRx;       // sheet below -> reactions above
+      // Lift the clicked bubble ABOVE the blur but BELOW emojis/sheet
+      activeBubble = bubble;
+      bubble.style.position = 'relative';
+      bubble.style.zIndex = '60'; // ov-bg is z-50, emojis/sheet are z-70
 
-                // If the first choice clips, try the other side, then clamp as last resort.
-                const rxTopBelow = (b.top - p.top) + b.height + gapRx;
-                const rxTopAbove = (b.top - p.top) - rxH - gapRx;
-                if (rxTopRaw < pad || (rxTopRaw + rxH) > (p.height - pad)) {
-                    rxTopRaw = needFlipUp ? rxTopAbove : rxTopBelow; // try opposite
-                }
-                const rxTop = clamp(rxTopRaw, pad, p.height - rxH - pad);
-                const rxLeft = clamp(shLeft, pad, p.width - rxW - pad); // align with sheet
-                reactions.style.left = rxLeft + 'px';
-                reactions.style.top = rxTop + 'px';
-            });
+      openOverlay();
+
+      // Reset positions before measuring
+      reactions.style.left = '0px'; reactions.style.top = '0px';
+      sheet.style.left = '0px'; sheet.style.top = '0px';
+
+      requestAnimationFrame(() => {
+        const rxW = reactions.offsetWidth, rxH = reactions.offsetHeight;
+        const shW = sheet.offsetWidth, shH = sheet.offsetHeight;
+
+        // Decide where to place the SHEET.
+        // Prefer below; if not enough space under the bubble, flip above.
+        const needFlipUp = (b.bottom + shH + 40) > p.bottom; // 40px cushion for shadow/gesture space
+        const sheetTopRaw = needFlipUp
+          ? (b.top - p.top) - shH - gapSheet   // above the bubble
+          : (b.top - p.top) + b.height + gapSheet; // below the bubble
+        const shTop = clamp(sheetTopRaw, pad, p.height - shH - pad);
+        const shLeft = clamp(b.left - p.left, pad, p.width - shW - pad);
+        sheet.style.left = shLeft + 'px';
+        sheet.style.top = shTop + 'px';
+
+        // Place REACTIONS on the OPPOSITE side of the sheet to avoid overlap.
+        let rxTopRaw = needFlipUp
+          ? (b.top - p.top) + b.height + gapRx   // sheet above -> reactions below
+          : (b.top - p.top) - rxH - gapRx;       // sheet below -> reactions above
+
+        // If the first choice clips, try the other side, then clamp as last resort.
+        const rxTopBelow = (b.top - p.top) + b.height + gapRx;
+        const rxTopAbove = (b.top - p.top) - rxH - gapRx;
+        if (rxTopRaw < pad || (rxTopRaw + rxH) > (p.height - pad)) {
+          rxTopRaw = needFlipUp ? rxTopAbove : rxTopBelow; // try opposite
         }
+        const rxTop = clamp(rxTopRaw, pad, p.height - rxH - pad);
+        const rxLeft = clamp(shLeft, pad, p.width - rxW - pad); // align with sheet
+        reactions.style.left = rxLeft + 'px';
+        reactions.style.top = rxTop + 'px';
+      });
+    }
 
-        // Event delegation: works for ALL current & future bubbles
-        chat.addEventListener('click', (e) => {
-            const b = e.target.closest('[data-bubble]');
-            if (!b || !chat.contains(b)) return;
-            e.stopPropagation();
-            openFor(b);
-        });
+    // Event delegation: works for ALL current & future bubbles
+    chat.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-bubble]');
+      if (!b || !chat.contains(b)) return;
+      e.stopPropagation();
+      openFor(b);
+    });
 
-        // Close by clicking background / ESC / scroll
-        ovBg.addEventListener('click', closeOverlay);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
-        chat.addEventListener('scroll', () => { if (overlay.classList.contains('ov-shown')) closeOverlay(); });
+    // Close by clicking background / ESC / scroll
+    ovBg.addEventListener('click', closeOverlay);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+    chat.addEventListener('scroll', () => { if (overlay.classList.contains('ov-shown')) closeOverlay(); });
 
-        // Light/Dark toggle via top-right three dots
-        const setTheme = (mode) => {
-            phone.classList.remove('theme-light', 'theme-dark');
-            phone.classList.add(mode === 'dark' ? 'theme-dark' : 'theme-light');
-            try { localStorage.setItem('wa-theme', mode); } catch (_) { }
-        };
-        const saved = (() => { try { return localStorage.getItem('wa-theme'); } catch (_) { return null; } })();
-        if (saved) setTheme(saved);
+    // Light/Dark toggle via top-right three dots
+    const setTheme = (mode) => {
+      phone.classList.remove('theme-light', 'theme-dark');
+      phone.classList.add(mode === 'dark' ? 'theme-dark' : 'theme-light');
+      try { localStorage.setItem('wa-theme', mode); } catch (_) { }
+    };
+    const saved = (() => { try { return localStorage.getItem('wa-theme'); } catch (_) { return null; } })();
+    if (saved) setTheme(saved);
 
-        themeBtn.addEventListener('click', () => {
-            const dark = phone.classList.contains('theme-dark');
-            setTheme(dark ? 'light' : 'dark');
-        });
+    themeBtn.addEventListener('click', () => {
+      const dark = phone.classList.contains('theme-dark');
+      setTheme(dark ? 'light' : 'dark');
+    });
 
-        // Render Lucide icons once
-        if (window.lucide && lucide.createIcons) { lucide.createIcons(); }
-    </script>
+    // Render Lucide icons once
+    if (window.lucide && lucide.createIcons) { lucide.createIcons(); }
+  </script>
 </body>
 
 </html>
