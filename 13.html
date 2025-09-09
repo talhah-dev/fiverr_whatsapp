@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="de">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>WA Overlay — Dark Theme (SENT)</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (header only) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" />
+    <!-- Lucide (sheet icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Dark chat wallpaper */
+        .chat-wallpaper {
+            background:
+                radial-gradient(circle at 2px 2px, rgba(255, 255, 255, .035) 2px, transparent 2px) 0 0/28px 28px,
+                linear-gradient(180deg, #111827 0%, #0b1220 100%);
+        }
+
+        .phone {
+            box-shadow: 0 24px 60px rgba(0, 0, 0, .45), 0 3px 12px rgba(0, 0, 0, .25);
+        }
+
+        .wh-header {
+            background: #1f2937;
+        }
+
+        /* dark header */
+        .sent {
+            background: #075E54;
+        }
+
+        /* WA dark green bubble */
+        .sent p,
+        .sent time {
+            color: #e6f3ee;
+        }
+
+        /* Overlay fades only; move inner layers for pop */
+        .fade {
+            transition: opacity .18s ease-out;
+        }
+
+        #overlay.ov-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #overlay.ov-shown {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .anim {
+            transition: opacity .18s ease-out, transform .18s ease-out;
+        }
+
+        #overlay.ov-hidden .anim {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        #overlay.ov-shown .anim {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Dark blur over chat */
+        #ov-bg {
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        /* Reactions pill — dark, glossy */
+        #reactions {
+            background: rgba(32, 32, 36, .88);
+            backdrop-filter: blur(10px) saturate(120%);
+            -webkit-backdrop-filter: blur(10px) saturate(120%);
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, .45), 0 2px 5px rgba(0, 0, 0, .25);
+        }
+
+        #reactions span {
+            line-height: 1;
+            transform: translateY(1px);
+        }
+
+        .rx-more {
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .12);
+            color: #d1d5db;
+        }
+
+        .rx-more:hover {
+            background: rgba(255, 255, 255, .14);
+        }
+
+        /* Dark sheet */
+        .wa-dark-sheet {
+            background: linear-gradient(180deg, rgba(39, 41, 46, .95), rgba(23, 25, 28, .95));
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 26px 48px rgba(0, 0, 0, .55), 0 3px 8px rgba(0, 0, 0, .35);
+        }
+
+        .wa-row {
+            color: #e5e7eb;
+        }
+
+        .wa-row:hover {
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .wa-row div {
+            color: #9ca3af;
+        }
+
+        .wa-sep {
+            height: 10px;
+            background: rgba(255, 255, 255, .06);
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
+
+        #sheet svg {
+            stroke: currentColor;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-black flex items-center justify-center p-6">
+
+    <section id="phone" class="phone relative w-[392px] h-[780px] bg-[#0b1320] rounded-[32px] overflow-hidden">
+        <!-- Header -->
+        <header class="wh-header h-14 px-4 flex items-center gap-3 text-gray-200">
+            <i class="fa-solid fa-angle-left text-xl"></i>
+            <div class="w-9 h-9 rounded-full bg-white/10"></div>
+            <div class="flex-1">
+                <p class="text-[15px] font-semibold leading-4 text-gray-100">Aleyna</p>
+                <p class="text-xs text-gray-400 leading-4">online</p>
+            </div>
+            <i class="fa-solid fa-video text-lg"></i>
+            <i class="fa-solid fa-phone text-lg ml-4"></i>
+            <i class="fa-solid fa-ellipsis-vertical text-lg ml-4"></i>
+        </header>
+
+        <!-- Chat -->
+        <div id="chat" class="chat-wallpaper h-[calc(100%-56px)] overflow-y-auto p-3 pb-24 relative">
+            <!-- SENT bubble -->
+            <div class="mt-6 flex justify-end">
+                <div data-bubble
+                    class="max-w-[82%] sent rounded-2xl rounded-br-md px-3 py-2 text-[14px] shadow-sm cursor-pointer">
+                    <p>Es bleibt es nicht nur beim chillen 😅</p>
+                    <div class="mt-1 text-[10px] flex items-center gap-1 justify-end opacity-80">
+                        <time>16:56</time>
+                        <!-- blue double-checks -->
+                        <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="#34B7F1" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 13l3 3 5-6"></path>
+                            <path d="M9 13l3 3 8-10"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input (dark) -->
+        <footer
+            class="absolute bottom-0 left-0 right-0 bg-[#111827] border-t border-white/10 px-3 py-2 flex items-center gap-2 text-gray-300">
+            <i class="fa-regular fa-face-smile text-xl text-gray-400"></i>
+            <input
+                class="flex-1 rounded-full bg-white/10 px-4 py-2 text-[14px] outline-none placeholder-gray-500 text-gray-100"
+                placeholder="Nachricht schreiben…" />
+            <i class="fa-solid fa-paperclip text-lg text-gray-400"></i>
+            <button class="w-10 h-10 rounded-full text-white grid place-items-center bg-emerald-600">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </footer>
+
+        <!-- ================= OVERLAY ================= -->
+        <div id="overlay" class="absolute inset-0 z-50 ov-hidden fade">
+            <!-- dark blur above chat -->
+            <div id="ov-bg" class="absolute inset-0 z-[50]"></div>
+
+            <!-- reactions -->
+            <div id="reactions" class="anim absolute z-[70] rounded-full px-3 py-1 flex items-center gap-2">
+                <span class="text-[20px] leading-none">👍</span>
+                <span class="text-[20px] leading-none">❤️</span>
+                <span class="text-[20px] leading-none">😂</span>
+                <span class="text-[20px] leading-none">😮</span>
+                <span class="text-[20px] leading-none">😢</span>
+                <span class="text-[20px] leading-none">🙏</span>
+                <span class="text-[20px] leading-none">🔥</span>
+
+                <!-- dark "+" button -->
+                <button class="rx-more ml-1" aria-label="More reactions">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <path d="M12 5v14M5 12h14" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- dark dropdown -->
+            <div id="sheet" class="anim absolute z-[70] rounded-2xl overflow-hidden wa-dark-sheet">
+                <ul class="min-w-[270px] text-[15px] divide-y divide-white/10">
+                    <!-- Antworten -->
+                    <li class="wa-row flex items-center justify-between px-4 py-3">
+                        <span>Antworten</span>
+                        <i data-lucide="corner-down-left" class="w-5 h-5"></i>
+                    </li>
+                    <!-- Weiterleiten -->
+                    <li class="wa-row flex items-center justify-between px-4 py-3">
+                        <span>Weiterleiten</span>
+                        <i data-lucide="corner-down-right" class="w-5 h-5"></i>
+                    </li>
+                    <li class="wa-row flex items-center justify-between px-4 py-3">
+                        <span>Kopieren</span>
+                        <i data-lucide="copy" class="w-5 h-5 text-gray-300"></i>
+                    </li>
+
+                    <li class="wa-row flex items-center justify-between px-4 py-3">
+                        <span>Bearbeiten</span>
+                        <i data-lucide="pencil" class="w-5 h-5 text-gray-300"></i>
+                    </li>
+
+                    <li class="wa-row flex items-center justify-between px-4 py-3">
+                        <span>Info</span>
+                        <i data-lucide="info" class="w-5 h-5 text-gray-300"></i>
+                    </li>
+
+                    <li class="wa-row flex items-center justify-between px-4 py-3">
+                        <span>Mit Stern markieren</span>
+                        <i data-lucide="star" class="w-5 h-5 text-gray-300"></i>
+                    </li>
+
+                    <li class="wa-row flex items-center justify-between px-4 py-3 text-red-400">
+                        <span>Löschen</span>
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </li>
+
+                    <li class="wa-sep"></li>
+
+                    <li class="wa-row flex items-center justify-between px-4 py-3">
+                        <span>Mehr …</span>
+                        <!-- circled three dots -->
+                        <svg viewBox="0 0 24 24" class="w-5 h-5 text-gray-300">
+                            <circle cx="12" cy="12" r="8.8" />
+                            <circle cx="9" cy="12" r="1.5" fill="currentColor" stroke="none" />
+                            <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+                            <circle cx="15" cy="12" r="1.5" fill="currentColor" stroke="none" />
+                        </svg>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const phone = document.getElementById('phone');
+        const chat = document.getElementById('chat');
+        const overlay = document.getElementById('overlay');
+        const ovBg = document.getElementById('ov-bg');
+        const reactions = document.getElementById('reactions');
+        const sheet = document.getElementById('sheet');
+
+        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+        let activeBubble = null;
+
+        const openOverlay = () => overlay.classList.replace('ov-hidden', 'ov-shown');
+        const closeOverlay = () => {
+            overlay.classList.replace('ov-shown', 'ov-hidden');
+            if (activeBubble) {
+                activeBubble.style.position = '';
+                activeBubble.style.zIndex = '';
+                activeBubble.removeEventListener('click', closeOverlay);
+                activeBubble = null;
+            }
+        };
+
+        function openFor(bubble) {
+            const p = phone.getBoundingClientRect();
+            const b = bubble.getBoundingClientRect();
+            const pad = 8;
+
+            activeBubble = bubble;
+            bubble.style.position = 'relative';
+            bubble.style.zIndex = '60'; // blur is z-50; reactions/sheet are z-70
+            openOverlay();
+
+            reactions.style.left = '0px'; reactions.style.top = '0px';
+            sheet.style.left = '0px'; sheet.style.top = '0px';
+
+            requestAnimationFrame(() => {
+                const rxW = reactions.offsetWidth, rxH = reactions.offsetHeight;
+                const shW = sheet.offsetWidth, shH = sheet.offsetHeight;
+
+                const belowY = (b.top - p.top) + b.height + 10;
+                const aboveY = (b.top - p.top) - shH - 10;
+                const shTop = ((b.bottom + shH + 40) > p.bottom)
+                    ? clamp(aboveY, pad, p.height - shH - pad)
+                    : clamp(belowY, pad, p.height - shH - pad);
+                const shLeft = clamp(b.left - p.left, pad, p.width - shW - pad);
+
+                sheet.style.left = shLeft + 'px';
+                sheet.style.top = shTop + 'px';
+
+                let rxLeft = shLeft;
+                let rxTop = (b.top - p.top) - rxH - 8;
+                if (rxTop < pad) rxTop = (b.top - p.top) + b.height + 8;
+                rxLeft = clamp(rxLeft, pad, p.width - rxW - pad);
+                reactions.style.left = rxLeft + 'px';
+                reactions.style.top = rxTop + 'px';
+            });
+
+            bubble.addEventListener('click', closeOverlay);
+        }
+
+        document.querySelectorAll('[data-bubble]').forEach(b => {
+            b.addEventListener('click', e => { e.stopPropagation(); openFor(b); });
+        });
+
+        ovBg.addEventListener('click', closeOverlay);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeOverlay(); });
+        chat.addEventListener('scroll', () => { if (overlay.classList.contains('ov-shown')) closeOverlay(); });
+
+        if (window.lucide && lucide.createIcons) { lucide.createIcons(); }
+    </script>
+</body>
+
+</html>
