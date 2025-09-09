@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp SS – Replica</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    :root {
+      --ios-bg: #f4f1ec;
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: #e9e7e3;
+    }
+    /* soft iOS-like shadow */
+    .ios-shadow { box-shadow: 0 8px 24px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.08); }
+    /* subtle 1px borders that look good on retina */
+    .hairline { box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); }
+
+    /* Context menu separators */
+    .divider:after{
+      content:"";
+      position:absolute; left:16px; right:16px; bottom:0;
+      height:1px; background: rgba(0,0,0,.07);
+    }
+
+    /* iOS battery widget */
+    .battery {
+      width: 28px; height: 13px; border-radius: 3px;
+      box-shadow: inset 0 0 0 1.5px #000;
+      position: relative; display: inline-block; margin-left: 6px;
+      background: #fff;
+    }
+    .battery:after{
+      content:""; position:absolute; right:-3.5px; top:3px;
+      width: 3px; height: 7px; border-radius: 1px; background:#000;
+    }
+    .battery .level {
+      position:absolute; left:2px; top:2px; bottom:2px; right:2px;
+      background: #000; border-radius: 2px; /* looks like near-full battery */
+    }
+
+    /* message tail mock (subtle rounded corner) */
+    .bubble-left:before {
+      content:""; position:absolute; left:-4px; bottom:0;
+      width:10px; height:10px; background:#fff; border-bottom-right-radius:10px;
+      box-shadow: 2px 2px 0 0 #fff;
+      transform: translateY(-1px);
+    }
+
+    /* Nice inert white overlay for context menu */
+    .glass {
+      background: rgba(255,255,255,.98);
+      backdrop-filter: saturate(160%) blur(5px);
+    }
+  </style>
+</head>
+
+<body class="min-h-dvh flex items-center justify-center p-4">
+  <!-- Phone frame -->
+  <div class="relative w-[390px] h-[844px] rounded-[44px] ios-shadow overflow-hidden hairline bg-[var(--ios-bg)]">
+
+    <!-- Blurry chat background “noise” -->
+    <div class="absolute inset-0">
+      <div class="absolute -top-6 -left-4 w-72 h-72 bg-[#b7f2bf] opacity-30 blur-3xl rounded-full"></div>
+      <div class="absolute top-44 right-4 w-80 h-72 bg-[#c7f7d1] opacity-35 blur-3xl rounded-full"></div>
+      <div class="absolute top-72 left-10 w-80 h-64 bg-[#d9d7d2] opacity-60 blur-2xl rounded-xl"></div>
+      <div class="absolute top-[410px] right-12 w-72 h-52 bg-black/70 blur-xl rounded-2xl"></div>
+    </div>
+
+    <!-- Status bar -->
+    <div class="absolute top-0 left-0 right-0 px-5 pt-3 h-[48px] text-[13px] font-medium text-black flex items-start justify-between">
+      <div class="flex items-center gap-2">
+        <span class="tracking-tight text-[15px]">17:00</span>
+        <span class="text-[14px]">🔕</span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- signal -->
+        <div class="flex items-end gap-[2px]">
+          <span class="block w-[3px] h-[6px] bg-black rounded-sm"></span>
+          <span class="block w-[3px] h-[8px] bg-black rounded-sm"></span>
+          <span class="block w-[3px] h-[10px] bg-black rounded-sm"></span>
+          <span class="block w-[3px] h-[12px] bg-black rounded-sm"></span>
+          <span class="block w-[3px] h-[12px] bg-black/30 rounded-sm"></span>
+        </div>
+        <!-- wifi -->
+        <svg width="18" height="14" viewBox="0 0 20 14" fill="none" class="-mt-[1px]">
+          <path d="M2 5.7C6.7 1.9 13.3 1.9 18 5.7" stroke="black" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M5 8.4c3.5-2.7 6.5-2.7 10 0" stroke="black" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M8.3 11.2c1.2-.9 2.2-.9 3.4 0" stroke="black" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="10" cy="12" r="1.1" fill="black"/>
+        </svg>
+        <!-- battery -->
+        <div class="battery"><div class="level" style="width:86%"></div></div>
+      </div>
+    </div>
+
+    <!-- Reaction bar -->
+    <div class="absolute left-8 top-[350px] bg-white rounded-full px-4 py-2 ios-shadow flex items-center gap-3">
+      <div class="text-[24px] leading-none">👍</div>
+      <div class="text-[24px] leading-none">❤️</div>
+      <div class="text-[24px] leading-none">😂</div>
+      <div class="text-[24px] leading-none">😮</div>
+      <div class="text-[24px] leading-none">😢</div>
+      <div class="text-[24px] leading-none">🙏</div>
+      <div class="text-[24px] leading-none">🔥</div>
+      <div class="ml-1 w-7 h-7 rounded-full border border-black/20 flex items-center justify-center text-[18px]">+</div>
+    </div>
+
+    <!-- Message bubble + time -->
+    <div class="absolute left-7 top-[408px] max-w-[290px]">
+      <div class="relative bubble-left bg-white rounded-2xl px-4 py-3 text-[18px] leading-[1.35] ios-shadow">
+        Aleyna ich komm dich jetzt abholen hab neuen amg lass ihn einweihen
+      </div>
+      <div class="text-right text-[12px] pr-2 pt-1 text-black/60">16:54</div>
+    </div>
+
+    <!-- Long-press context menu -->
+    <div class="absolute left-6 top-[520px] w-[360px] glass rounded-2xl ios-shadow overflow-hidden">
+      <div class="relative divider">
+        <button class="w-full flex items-center justify-between px-5 py-[14px] text-[20px]">
+          <span>Antworten</span>
+          <!-- reply -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M9 7l-5 5 5 5" stroke="#000" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 12h9a7 7 0 017 7" stroke="#000" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="relative divider">
+        <button class="w-full flex items-center justify-between px-5 py-[14px] text-[20px]">
+          <span>Weiterleiten</span>
+          <!-- forward -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M15 7l5 5-5 5" stroke="#000" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M20 12H8a6 6 0 00-6 6" stroke="#000" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="relative divider">
+        <button class="w-full flex items-center justify-between px-5 py-[14px] text-[20px]">
+          <span>Kopieren</span>
+          <!-- copy -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <rect x="9" y="9" width="10" height="12" rx="2" stroke="#000" stroke-width="1.7"/>
+            <rect x="5" y="3" width="10" height="12" rx="2" stroke="#000" stroke-width="1.7"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="relative divider">
+        <button class="w-full flex items-center justify-between px-5 py-[14px] text-[20px]">
+          <span>Mit Stern markieren</span>
+          <!-- star -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 18.7 6.2 21l1.1-6.5L2.6 9.8l6.5-.9L12 3z" stroke="#000" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="relative divider">
+        <button class="w-full flex items-center justify-between px-5 py-[14px] text-[20px]">
+          <span class="text-[#d11a2a]">Löschen</span>
+          <!-- trash -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M3 6h18" stroke="#d11a2a" stroke-width="1.7" stroke-linecap="round"/>
+            <path d="M8 6l1-2h6l1 2M7 6v13a2 2 0 002 2h6a2 2 0 002-2V6" stroke="#d11a2a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <button class="w-full flex items-center justify-between px-5 py-[14px] text-[20px]">
+        <span>Mehr …</span>
+        <!-- ellipsis in a bubble -->
+        <div class="w-7 h-7 rounded-full border border-black/20 flex items-center justify-center text-[20px] leading-none">···</div>
+      </button>
+    </div>
+
+    <!-- Bottom home indicator -->
+    <div class="absolute bottom-3 left-1/2 -translate-x-1/2 w-[180px] h-[5px] bg-black/90 rounded-full"></div>
+  </div>
+</body>
+</html>
