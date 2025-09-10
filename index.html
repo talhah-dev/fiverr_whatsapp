@@ -27,7 +27,7 @@
       --incoming-bg: #ffffff;
       --incoming-fg: #111111;
       --time-fg: #a3a3a3;
-
+      --sb-fg: #111111;
       --ov-bg: rgba(255, 255, 255, .55);
       --ov-blur: 3px;
 
@@ -58,7 +58,7 @@
       --incoming-bg: #23272b;
       --incoming-fg: #e5e7eb;
       --time-fg: #9ca3af;
-
+      --sb-fg: #e5e7eb;
       --ov-bg: rgba(0, 0, 0, .55);
       --ov-blur: 4px;
 
@@ -77,6 +77,18 @@
       --input-field-bg: rgba(255, 255, 255, .10);
       --icon-fg: #e5e7eb;
     }
+
+    /* Invert images only when #phone has theme-dark */
+    #phone.theme-dark .only-dark-invert {
+      filter: invert(1);
+    }
+
+    #phone.theme-light .only-dark-invert {
+      filter: none !important;
+    }
+
+    /* cancels Tailwind .invert */
+
 
     /* App chrome */
     #phone {
@@ -252,12 +264,36 @@
       color: var(--icon-fg);
       opacity: .85;
     }
+
+    .ios-status {
+      color: var(--sb-fg);
+    }
+
+    .sb-fg {
+      color: var(--sb-fg) !important;
+    }
   </style>
 </head>
 
 <body class="min-h-screen sm:bg-neutral-200 flex items-center justify-center sm:p-6">
-  <section id="phone" class="theme-light relative w-[392px] h-[780px] sm:rounded-[32px] overflow-hidden phone">
+  <section id="phone" class="theme-light relative w-[392px] h-[780px] sm:rounded-3xl overflow-hidden phone">
     <!-- Header -->
+
+    <div class="ios-status pointer-events-none px-4 py-1 flex items-center justify-between">
+      <!-- Left: time + mute -->
+      <div class="flex items-center gap-1.5">
+        <span class="leading-none text-sm sb-fg">17:00</span>
+        <i class="fa-regular text-xs text-zinc-800 fa-bell-slash sb-fg"></i>
+      </div>
+
+      <!-- Right: Wi-Fi • Battery -->
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-wifi text-xs text-zinc-800 sb-fg"></i>
+        <i class="fa-solid fa-battery-half text-sm text-zinc-700 sb-fg"></i>
+      </div>
+    </div>
+
+
     <header class="wh-header h-14 px-4 flex items-center gap-3">
       <i class="fa-solid fa-angle-left text-xl"></i>
       <div class="w-9 h-9 rounded-full" style="background: rgba(255,255,255,.2);"></div>
@@ -467,10 +503,15 @@
         <!-- LEFT / INCOMING menu (unchanged items, just an id added) -->
         <ul id="sheetLeft" class="min-w-[270px] text-[15px] divide-y wa-list"
           style="border-color: var(--sheet-border);">
-          <li class="wa-item"><span>Antworten</span><i data-lucide="corner-down-left" class="wa-ico w-5 h-5"></i></li>
-          <li class="wa-item"><span>Weiterleiten</span><i data-lucide="corner-down-right" class="wa-ico w-5 h-5"></i>
+          <li class="wa-item">
+            <span>Antworten</span>
+            <img src="/docs/forward.png" class="h-5 -scale-x-100 invert only-dark-invert" alt="">
           </li>
-          <li class="wa-item"><span>Kopieren</span><i data-lucide="copy" class="w-5 h-5"></i></li>
+          <li class="wa-item">
+            <span>Weiterleiten</span>
+            <img src="/docs/forward.png" class="h-5 invert only-dark-invert" alt="">
+          </li>
+          <li class="wa-item"><span>Kopieren</span><i data-lucide="files" class="w-5 h-5"></i></li>
           <li class="wa-item"><span>Mit Stern markieren</span><i data-lucide="star" class="w-5 h-5"></i></li>
           <li class="wa-item wa-danger"><span>Löschen</span><i data-lucide="trash-2" class="w-5 h-5"></i></li>
           <li class="wa-sep"></li>
@@ -489,10 +530,15 @@
         <!-- RIGHT / SENT menu (new) -->
         <ul id="sheetRight" class="min-w-[270px] text-[15px] divide-y wa-list hidden"
           style="border-color: var(--sheet-border);">
-          <li class="wa-item"><span>Antworten</span><i data-lucide="corner-down-left" class="wa-ico w-5 h-5"></i></li>
-          <li class="wa-item"><span>Weiterleiten</span><i data-lucide="corner-down-right" class="wa-ico w-5 h-5"></i>
+          <li class="wa-item">
+            <span>Antworten</span>
+            <img src="/docs/forward.png" class="h-5 -scale-x-100 invert only-dark-invert" alt="">
           </li>
-          <li class="wa-item"><span>Kopieren</span><i data-lucide="copy" class="w-5 h-5"></i></li>
+          <li class="wa-item">
+            <span>Weiterleiten</span>
+            <img src="/docs/forward.png" class="h-5 invert only-dark-invert" alt="">
+          </li>
+          <li class="wa-item"><span>Kopieren</span><i data-lucide="files" class="w-5 h-5"></i></li>
           <li class="wa-item"><span>Bearbeiten</span><i data-lucide="pencil" class="w-5 h-5"></i></li>
           <li class="wa-item"><span>Info</span><i data-lucide="info" class="w-5 h-5"></i></li>
           <li class="wa-item"><span>Mit Stern markieren</span><i data-lucide="star" class="w-5 h-5"></i></li>
